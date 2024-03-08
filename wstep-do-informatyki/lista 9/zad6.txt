@@ -1,0 +1,12 @@
+function znajdźNajtańsząŚcieżkę(n, a):
+    dp = tablica[n][n]
+    dp[0][0] = a[0][0]
+
+    for i od 0 do n-1:
+        for j od 0 do n-1:
+            if i > 0:
+                dp[i][j] = min(dp[i][j], dp[i-1][j] + a[i][j])
+            if j > 0:
+                dp[i][j] = min(dp[i][j], dp[i][j-1] + a[i][j])
+
+    return dp[n-1][n-1]

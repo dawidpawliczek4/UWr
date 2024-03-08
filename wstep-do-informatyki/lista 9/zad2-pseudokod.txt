@@ -1,0 +1,28 @@
+function solveNQueens(n):
+    board = inicjuj tablicę n×n z wartościami 0
+    return placeQueens(board, 0, n)
+
+function placeQueens(board, col, n):
+    if col == n:
+        return 1  # Znaleziono rozwiązanie, zwiększ licznik
+    count = 0
+    for i = 0 to n-1:
+        if isValid(board, i, col, n):
+            board[i][col] = 1  # Umieść hetmana
+            count += placeQueens(board, col + 1, n)  # Rekurencyjnie umieść kolejne hetmany
+            board[i][col] = 0  # Usuń hetmana (cofnij ruch)
+    return count
+
+function isValid(board, row, col, n):
+    for i = 0 to col-1:
+        if board[row][i] == 1:
+            return false  # Sprawdź wiersz
+    for i = 0 to row-1:
+        if board[i][col] == 1:
+            return false  # Sprawdź kolumnę
+    for i = 1 to min(row, col):
+        if board[row-i][col-i] == 1:
+            return false  # Sprawdź lewą górną przekątną
+        if row+i < n and col-i >= 0 and board[row+i][col-i] == 1:
+            return false  # Sprawdź lewą dolną przekątną
+    return true

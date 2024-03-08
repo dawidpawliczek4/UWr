@@ -1,0 +1,18 @@
+Problem skoczka szachowego polega na znalezieniu trasy dla skoczka na szachownicy (zwykle 8x8), tak aby odwiedził on każde pole dokładnie raz. To klasyczne zadanie z zakresu algorytmiki, które można rozwiązać przy użyciu metody przeszukiwania z nawrotami, często nazywanej algorytmem "backtracking".
+
+Idea Rozwiązania:
+Metoda przeszukiwania z nawrotami to technika rekurencyjna. W przypadku problemu skoczka, algorytm próbuje poruszać skoczkiem na wszystkie możliwe pola, zgodnie z zasadami ruchu skoczka w szachach, i śledzi ścieżkę. Jeśli napotka sytuację, w której nie może kontynuować (brak dostępnych ruchów lub pole zostało już odwiedzone), to "cofa się" (ang. backtracks) do poprzedniej pozycji i próbuje innej ścieżki.
+
+Struktury Danych:
+Szachownica: Najczęściej reprezentowana jako dwuwymiarowa tablica int[8][8] (dla standardowej szachownicy). Każde pole tablicy odpowiada polu na szachownicy. Wartości w tablicy śledzą, czy i w jakiej kolejności pole było odwiedzone.
+Ruchy Skoczka: Tablica zawierająca możliwe ruchy skoczka. Skoczek porusza się literą „L” – o dwa pola w jednym kierunku, a potem o jedno pole w kierunku prostopadłym. To może być reprezentowane jako tablica kierunków, np. int[][] moves = {{-2, -1}, {-1, -2}, {1, -2}, {2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}};.
+Algorytm:
+Inicjuj szachownicę, ustawiając wszystkie wartości na -1 lub podobny marker oznaczający "nieodwiedzone".
+Umieść skoczka na początkowym polu (można zacząć od dowolnego miejsca, ale często wybiera się lewy górny róg).
+Wywołaj funkcję rekurencyjną, która:
+Zapisuje obecną pozycję jako odwiedzoną (np. umieszczając numer kroku w tablicy szachownicy).
+Dla każdego z możliwych ruchów skoczka, sprawdź, czy ruch jest dozwolony (czy nie wychodzi poza szachownicę i czy pole nie było wcześniej odwiedzone).
+Wykonaj dozwolony ruch i rekurencyjnie wywołaj funkcję dla nowej pozycji.
+Jeśli żaden ruch nie jest możliwy lub wszystkie pola zostały odwiedzone, zakończ rekurencję (jeśli wszystkie pola zostały odwiedzone, znaleziono rozwiązanie).
+Jeśli ślepa uliczka, "cofnij się" (ustaw pole jako nieodwiedzone i wróć do poprzedniej pozycji).
+Algorytm ten jest przykładem przeszukiwania w głąb z nawrotami. Jego efektywność zależy od wielu czynników, w tym od wyboru początkowego pola i strategii wybierania kolejnych ruchów. Dla większych szachownic może być konieczne użycie heurystyk dla przyspieszenia znalezienia rozwiązania.

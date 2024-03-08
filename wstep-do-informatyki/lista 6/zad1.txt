@@ -1,0 +1,15 @@
+
+
+x = a[i]
+lewy = 0
+prawy = i-1
+while lewy < prawy:
+    k = (lewy+prawy) // 2
+    if a[k] < x:
+        lewy = k+1
+    else:
+        prawy = k
+
+if a[lewy] < x:
+    lewy += 1
+

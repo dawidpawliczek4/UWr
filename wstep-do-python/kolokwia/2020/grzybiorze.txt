@@ -1,0 +1,3 @@
+Skurwiel 12 3
+Dawid 1 2 3
+Dawid 15 2

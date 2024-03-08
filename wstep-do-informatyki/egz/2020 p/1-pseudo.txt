@@ -1,0 +1,15 @@
+
+maks = 0
+
+dla i = 0...n-1
+    wiersz = Y[i]
+    obciazenieWiersz = 0
+    dla j = 0...n-1
+        obciazenieWiersz +=1 jezeli wiersz[j] == wiersz[i]
+    jezeli obciazenieWiersz > maks:
+        maks = obciazenieWiersz
+    kolumna = X[i]
+    obciazenieKolumna = 0
+        to samo kur
+        
+        

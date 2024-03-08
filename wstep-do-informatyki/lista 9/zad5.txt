@@ -1,0 +1,20 @@
+funkcja znajdźKwadratMagiczny(n):
+    jeżeli n == 2:
+        zwróć "Kwadrat magiczny nie istnieje dla n = 2"
+    inicjalizuj pustą planszę n x n
+    próbujWypełnićPlanszę(plansza, 0, 0)
+    zwróć planszę
+
+funkcja próbujWypełnićPlanszę(plansza, wiersz, kolumna):
+    jeżeli wiersz == n:
+        jeżeli plansza jest kwadratem magicznym:
+            zwróć prawda
+        w przeciwnym razie:
+            zwróć fałsz
+    dla każdej liczby od 1 do n^2:
+        jeżeli liczba nie jest jeszcze na planszy:
+            umieść liczbę w (wiersz, kolumna)
+            jeżeli próbujWypełnićPlanszę(plansza, następnyWiersz, następnaKolumna):
+                zwróć prawda
+            usuń liczbę z (wiersz, kolumna)
+    zwróć fałsz
