@@ -4,7 +4,7 @@ type 'a tree =
 
 let t =
   Node 
-  (Node (Leaf, 2, Leaf), 
+  (Node (Leaf, 20, Leaf), 
   5, 
   (Node ((Node (Leaf, 6, Leaf)), 8, (Node (Leaf, 9, Leaf))))
   )
@@ -24,16 +24,14 @@ let tree_flip t =
 let tree_height t =
   fold_tree (fun l v r -> 1 + max l r) 0 t
 
-let tree_span t =
-  let f l v r = match (l, r) with
-    | (None, None) -> Some (v, v)  (* Jeśli oba poddrzewa są puste, zwracamy wartość tego węzła jako min i max. *)
-    | (Some (lmin, lmax), None) -> Some (min lmin v, max lmax v)  (* Jeśli istnieje tylko lewe poddrzewo *)
-    | (None, Some (rmin, rmax)) -> Some (min rmin v, max rmax v)  (* Jeśli istnieje tylko prawe poddrzewo *)
-    | (Some (lmin, lmax), Some (rmin, rmax)) -> Some (min lmin (min rmin v), max lmax (max rmax v))  (* Jeśli istnieją oba poddrzewa *)
-  in
-  fold_tree f None t
+let tree_span t = 
+let flatten x = fold_tree (fun l v r -> l @ [v] @ r) [] x
+in
+let flat = flatten t
+in match flat with
+  | [] -> (0, 0)
+  | _ -> (List.hd flat, List.hd (List.rev flat))
 
-let rec preorder t =
-  match t with
-  | Leaf -> []
-  | Node (l, v, r) -> [v] @ (preorder l) @ (preorder r)
+let preorder t =
+  let f l v r = [v] @ l @ r in
+  fold_tree f [] t

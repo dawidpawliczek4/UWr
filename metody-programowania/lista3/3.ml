@@ -5,8 +5,6 @@ let build_list n f =
   in
   aux [] (n-1)
 
-
-
 let negatives n = build_list n (fun x -> -x)
 let list2 = negatives 10
 

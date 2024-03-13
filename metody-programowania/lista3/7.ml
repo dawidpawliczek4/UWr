@@ -16,9 +16,9 @@ let rec fold_tree f a t =
 
 let flatten_old t = fold_tree (fun l v r -> l @ [v] @ r) [] t
 
-let rec flat_append t xs =
+let rec flat_append t xs =  
   match t with
-  | Leaf -> xs
+  | Leaf -> xs 
   | Node (l, v, r) -> flat_append l (v :: flat_append r xs)
 
 let flatten t =
