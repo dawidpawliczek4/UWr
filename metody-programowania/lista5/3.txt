@@ -1,0 +1,8 @@
+type 'v nnf =
+  | NNFLit of bool * 'v
+  | NNFConj of 'v nnf * 'v nnf 
+  | NNFDisj of 'v nnf * 'v nnf
+
+1. Baza indukcyjna (NNFLit): Musisz udowodnić, że Twoje stwierdzenie jest prawdziwe dla każdego literału NNFLit(b, v), gdzie b jest flagą boolowską, a v jest zmienną zdaniową. Literały są podstawowymi blokami konstrukcyjnymi formuł NNF, więc dowód musi zacząć się od nich.
+2. Krok indukcyjny (NNFConj): Następnie musisz pokazać, że jeśli Twoje stwierdzenie jest prawdziwe dla p i q (założenie indukcyjne), gdzie p i q są typu 'v nnf, to musi być także prawdziwe dla NNFConj(p, q).
+3. Krok indukcyjny (NNFDisj): Podobnie, musisz pokazać, że jeśli Twoje stwierdzenie jest prawdziwe dla p i q (założenie indukcyjne), to musi być także prawdziwe dla NNFDisj(p, q).

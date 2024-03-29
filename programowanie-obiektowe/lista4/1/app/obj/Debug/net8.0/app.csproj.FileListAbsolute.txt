@@ -1,0 +1,15 @@
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/bin/Debug/net8.0/app
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/bin/Debug/net8.0/app.deps.json
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/bin/Debug/net8.0/app.runtimeconfig.json
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/bin/Debug/net8.0/app.dll
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/bin/Debug/net8.0/app.pdb
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.AssemblyInfoInputs.cache
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.AssemblyInfo.cs
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.csproj.CoreCompileInputs.cache
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.sourcelink.json
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.dll
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/refint/app.dll
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.pdb
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/app.genruntimeconfig.cache
+/Users/dawidpawliczek4/Studia/UWr/programowanie-obiektowe/lista4/1/app/obj/Debug/net8.0/ref/app.dll

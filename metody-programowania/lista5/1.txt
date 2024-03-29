@@ -1,0 +1,23 @@
+let rec map f = function
+  | [] -> []
+  | h :: t -> f h :: map f t
+
+map f (map g xs) ≡ map (fun x -> f (g x)) xs
+
+1. baza indukcyjna
+jesli xs == []
+map g [] == [] 
+map f (map g []) == []
+map (fun x -> f (g x)) [] == []
+
+2. krok indukcyjny
+zakladamy ze 
+map f (map g xs) == map (fun x -> f (g x)) xs
+pokazemy ze 
+map f (map g (x::xs)) == map (fun x -> f (g x)) (x::xs)
+
+map f (map g (x::xs)) 
+= map f (g x :: map g xs) 
+= f (g x) :: map f (map g xs)  
+= f (g x) :: map (fun x -> f (g x)) xs  
+= map (fun x -> f (g x)) (x::xs)  

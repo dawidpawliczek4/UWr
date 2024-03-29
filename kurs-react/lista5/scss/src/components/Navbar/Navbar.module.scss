@@ -1,0 +1,59 @@
+.button {
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  padding: 10px 0;
+  text-align: center;
+  z-index: 1000;
+
+  a {
+    text-decoration: none;
+    padding: 0 20px;
+  }
+}
+
+.lightButton {
+  background-color: #333;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #555;
+  }
+}
+
+.darkButton {
+  background-color: #ddd;
+  color: #333;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #ccc;
+  }
+}
+
+.lightNavbar {
+  background-color: #f0f0f0;
+
+  a {
+    color: #333;
+  }
+}
+
+.darkNavbar {
+  background-color: #333;
+  color: #fff;
+
+  a {
+    color: #fff;
+  }
+}
