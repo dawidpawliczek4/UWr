@@ -1,0 +1,54 @@
+.blogPosts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+.blogPost {
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+  button {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #45a049;
+    }
+  }
+}
+
+:global(.light-theme) .blogPost {
+  background-color: #f0f0f0;
+  color: #333;
+  button {
+    background-color: #4caf50;
+    color: #fff;
+    &:hover {
+      background-color: #45a049;
+    }
+  }
+}
+
+:global(.dark-theme) .blogPost {
+  background-color: #222;
+  color: #fff;
+  button {
+    background-color: #4caf50;
+    color: #fff;
+    &:hover {
+      background-color: #45a049;
+    }
+  }
+}

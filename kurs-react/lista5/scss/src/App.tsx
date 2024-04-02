@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import "./App.css";
+import "./App.scss";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header/Header";
 import Section from "./components/Section/Section";
 import About from "./components/About/About";
 import Services from "./components/Services/Services";
+import TeamMembers from "./components/TeamMembers/TeamMembers";
+import BlogPosts from "./components/BlogPosts/BlogPosts";
+import Contact from "./components/Contact/Contact";
+import Footer from "./components/Footer/Footer";
 
 const companyData = {
   name: "Acme Corporation",
@@ -122,56 +126,16 @@ const App = () => {
           <Services services={companyData.services} />
         </Section>
         <Section id="team">
-          <h2>Meet Our Team</h2>
-          <div className="team-members">
-            {companyData.teamMembers.map((member) => (
-              <div key={member.id} className="team-member">
-                <img src={member.image} alt={member.name} />
-                <div>
-                  <h3>{member.name}</h3>
-                  <p>{member.position}</p>
-                  <p>{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <TeamMembers teamMembers={companyData.teamMembers} />
         </Section>
         <Section id="blog">
-          <h2>Latest Blog Posts</h2>
-          <div className="blog-posts">
-            {companyData.blogPosts.map((post) => (
-              <div key={post.id} className="blog-post">
-                <h3>{post.title}</h3>
-                <p>{post.date}</p>
-                <p>{post.content}</p>
-                <button>Read More</button>
-              </div>
-            ))}
-          </div>
+          <BlogPosts blogPosts={companyData.blogPosts} />
         </Section>
         <Section id="contact">
-          <h2>Contact Us</h2>
-          <form onSubmit={handleSubmit} className="contact-form">
-            <div className="form-group">
-              <input type="text" placeholder="Name" required />
-            </div>
-            <div className="form-group">
-              <input type="email" placeholder="Email" required />
-            </div>
-            <div className="form-group">
-              <textarea rows={5} placeholder="Message" required></textarea>
-            </div>
-            <button type="submit">Send Message</button>
-          </form>
+          <Contact handleSubmit={handleSubmit} />
         </Section>
       </div>
-      <footer className="footer">
-        <div className="footer-content">
-          <p>
-            &copy; {new Date().getFullYear()} {companyData.name}
-          </p>
-        </div>
-      </footer>
+      <Footer companyName={companyData.name} />
     </div>
   );
 };
