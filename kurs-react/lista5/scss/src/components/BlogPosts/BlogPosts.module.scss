@@ -32,11 +32,11 @@
 }
 
 :global(.light-theme) .blogPost {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: map-get($map: $colors, $key: blog-post-light);
+  color: map-get($map: $colors, $key: blog-post-light-color);
 }
 
 :global(.dark-theme) .blogPost {
-  background-color: #222;
-  color: #fff;
+  background-color: map-get($map: $colors, $key: blog-post-dark);
+  color: map-get($map: $colors, $key: blog-post-dark-color);
 }

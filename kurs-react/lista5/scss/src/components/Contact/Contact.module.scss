@@ -38,28 +38,30 @@
 }
 
 :global(.light-theme) .contactForm {
-  background-color: #f9f9f9;
-  color: #333;
-  border: 1px solid #ddd;
+  background-color: map-get($map: $colors, $key: contact-form-light);
+  color: map-get($map: $colors, $key: contact-form-light-color);
+  border: 1px solid map-get($map: $colors, $key: contact-form-border-light);
 
   input[type="text"],
   input[type="email"],
   textarea {
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #ccc;
+    background-color: map-get($map: $colors, $key: contact-form-textarea-light);
+    color: map-get($map: $colors, $key: contact-form-textarea-light-color);
+    border: 1px solid
+      map-get($map: $colors, $key: contact-form-textarea-light-border);
   }
 }
 
 :global(dark-theme) .contactForm {
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background-color: map-get($map: $colors, $key: contact-form-dark);
+  color: map-get($map: $colors, $key: contact-form-dark-color);
+  border: 1px solid map-get($map: $colors, $key: contact-form-border-dark);
   input[type="text"],
   input[type="email"],
   textarea {
-    background-color: #444;
-    color: #fff;
-    border: 1px solid #666;
+    background-color: map-get($map: $colors, $key: contact-form-textarea-dark);
+    color: map-get($map: $colors, $key: contact-form-textarea-dark-color);
+    border: 1px solid
+      map-get($map: $colors, $key: contact-form-textarea-dark-border);
   }
 }

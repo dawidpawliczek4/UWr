@@ -1,3 +1,4 @@
+@import "../../variables.scss";
 .button {
   cursor: pointer;
   padding: 10px 20px;
@@ -19,45 +20,44 @@
 
 :global(.light-theme) {
   .button {
-    background-color: #333;
-    color: #fff;
+    background-color: map-get($map: $colors, $key: navbar-button-light);
+    color: map-get($map: $colors, $key: navbar-button-light-text);
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #555;
+      background-color: map-get($map: $colors, $key: navbar-button-hover-light);
     }
   }
 
   .navbar {
-    background-color: #f0f0f0;
+    background-color: map-get($map: $colors, $key: navbar-light);
 
     a {
-      color: #333;
+      color: map-get($map: $colors, $key: navbar-a-light);
     }
   }
 }
 
 :global(.dark-theme) {
   .button {
-    background-color: #ddd;
-    color: #333;
+    background-color: map-get($map: $colors, $key: navbar-button-dark);
+    color: map-get($map: $colors, $key: navbar-button-dark-text);
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #ccc;
+      background-color: map-get($map: $colors, $key: navbar-button-hover-dark);
     }
   }
 
   .navbar {
-    background-color: #333;
-    color: #fff;
+    background-color: map-get($map: $colors, $key: navbar-dark);
 
     a {
-      color: #fff;
+      color: map-get($map: $colors, $key: navbar-a-dark);
     }
   }
 }
