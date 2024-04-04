@@ -1,3 +1,4 @@
+@import "../../variables.scss";
 .blogPosts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -22,9 +23,10 @@
     cursor: pointer;
     padding: 5px 10px;
     transition: background-color 0.3s ease;
+    background-color: map-get($map: $colors, $key: button);
 
     &:hover {
-      background-color: #45a049;
+      background-color: map-get($map: $colors, $key: button-hover);
     }
   }
 }
@@ -32,23 +34,9 @@
 :global(.light-theme) .blogPost {
   background-color: #f0f0f0;
   color: #333;
-  button {
-    background-color: #4caf50;
-    color: #fff;
-    &:hover {
-      background-color: #45a049;
-    }
-  }
 }
 
 :global(.dark-theme) .blogPost {
   background-color: #222;
   color: #fff;
-  button {
-    background-color: #4caf50;
-    color: #fff;
-    &:hover {
-      background-color: #45a049;
-    }
-  }
 }

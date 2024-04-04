@@ -1,3 +1,5 @@
+// Dawid Pawliczek, 347081, zadanie 1, lista 5
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -64,33 +66,47 @@ class AceCard extends Card {
     }
 }
 
-class NumberCard extends Card {
-    public NumberCard(int value) {
-        super(value);
+class KingCard extends Card {
+    public KingCard() {
+        super(13);
     }
 
     @Override
     public String toString() {
-        return "NumberCard{" +
-                "value=" + getValue() +
-                '}';
+        return "KingCard{}";
     }
 }
 
-public class Program {
+class QueenCard extends Card {
+    public QueenCard() {
+        super(12);
+    }
+
+    @Override
+    public String toString() {
+        return "QueenCard{}";
+    }
+}
+
+class JackCard extends Card {
+    public JackCard() {
+        super(11);
+    }
+
+    @Override
+    public String toString() {
+        return "JackCard{}";
+    }
+}
+
+public class ZadaniePierwsze {
     public static void main(String[] args) {
         OrderedList<Card> cards = new OrderedList<>();
-        cards.add_element(new NumberCard(5));
-        cards.add_element(new AceCard());
-        cards.add_element(new NumberCard(2));
-        cards.add_element(new NumberCard(10));
-        cards.add_element(new NumberCard(3));
-        cards.add_element(new NumberCard(7));
-        cards.add_element(new NumberCard(4));
-        cards.add_element(new NumberCard(6));
-        cards.add_element(new NumberCard(8));
-        cards.add_element(new NumberCard(9));
+        cards.add_element(new KingCard());     
+        cards.add_element(new QueenCard());
+        cards.add_element(new AceCard());  
+        cards.add_element(new JackCard());         
         System.out.println(cards);
-        System.out.println(cards.get_first());
+        System.out.println(cards.get_first());        
     }
 }

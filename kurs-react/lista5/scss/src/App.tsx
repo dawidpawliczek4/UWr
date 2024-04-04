@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./App.scss";
 import Navbar from "./components/Navbar/Navbar";
 import Header from "./components/Header/Header";
 import Section from "./components/Section/Section";
@@ -9,6 +8,7 @@ import TeamMembers from "./components/TeamMembers/TeamMembers";
 import BlogPosts from "./components/BlogPosts/BlogPosts";
 import Contact from "./components/Contact/Contact";
 import Footer from "./components/Footer/Footer";
+import "./App.scss";
 
 const companyData = {
   name: "Acme Corporation",

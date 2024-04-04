@@ -1,4 +1,4 @@
-// Bazowy interfejs lub klasa abstrakcyjna dla wszystkich wyrażeń
+// Dawid Pawliczek, 347081, zadanie 2, lista 5
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,6 @@ abstract class Expression {
     public abstract String toString();
 }
 
-// Reprezentuje stałą wartość w wyrażeniu
 class Const extends Expression {
     private int value;
 
@@ -46,7 +45,6 @@ class Context {
     }
 }
 
-// Reprezentuje zmienną w wyrażeniu
 class Variable extends Expression {
     private String name;
     private Context context;
@@ -69,7 +67,6 @@ class Variable extends Expression {
     }
 }
 
-// Reprezentuje operację dodawania
 class Add extends Expression {
     private Expression left;
     private Expression right;
@@ -88,7 +85,6 @@ class Add extends Expression {
     }
 }
 
-// Reprezentuje operację odejmowania
 class Subtract extends Expression {
     private Expression left;
     private Expression right;
@@ -107,7 +103,7 @@ class Subtract extends Expression {
     }
 }
 
-public class Program {
+public class ZadanieDrugie {
     public static void main(String[] args) {
         // 2 + 3 = 5
         Expression e1 = new Add(new Const(2), new Const(3));

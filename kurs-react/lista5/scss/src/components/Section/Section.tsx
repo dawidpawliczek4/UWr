@@ -9,7 +9,7 @@ const Section = ({
   id: string;
 }) => {
   return (
-    <section id={id} className={`${styles.section} ${id}`}>
+    <section id={id} className={styles.section}>
       <div className={styles.sectionContent}>{children}</div>
     </section>
   );
