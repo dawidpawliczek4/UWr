@@ -1,0 +1,10 @@
+G=(N,T,P,S)
+N={S}
+T={a,b}
+P={
+    S -> aSa
+    S -> bSb
+    S -> a
+    S -> b
+    S -> e    
+    }

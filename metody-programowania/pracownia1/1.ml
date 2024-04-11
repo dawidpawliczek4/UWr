@@ -3,19 +3,19 @@ let ( let* ) xs ys = List.concat_map ys xs
 let rec choose m n =
   if m > n then [] else m :: choose (m+1) n
 
-  let rec build_row spec len =   
-    match spec with
-  | [] -> [List.init len (fun _ -> false)]
-  | [x] ->     
-    List.init (max 0 (len - x + 1)) (fun i ->
-      (List.init i (fun _ -> false)) @ (List.init x (fun _ -> true)) @ (List.init (len - x - i) (fun _ -> false))
-    )
-  | x:: xs ->
-      List.concat_map (fun i ->
-        let first_part = (List.init i (fun _ -> false)) @ (List.init x (fun _ -> true)) in
-        let rest_len = max 0 (len - x - i - 1) in
-        List.map (fun rest -> first_part @ [false] @ rest) (build_row xs rest_len)
-      ) (List.init (len - x - List.length spec + 2) (fun i -> i))
+let rec build_row spec len =   
+  match spec with
+| [] -> [List.init len (fun _ -> false)]
+| [x] ->     
+  List.init (max 0 (len - x + 1)) (fun i ->
+    (List.init i (fun _ -> false)) @ (List.init x (fun _ -> true)) @ (List.init (len - x - i) (fun _ -> false))
+  )
+| x:: xs ->
+    List.concat_map (fun i ->
+      let first_part = (List.init i (fun _ -> false)) @ (List.init x (fun _ -> true)) in
+      let rest_len = max 0 (len - x - i - 1) in
+      List.map (fun rest -> first_part @ [false] @ rest) (build_row xs rest_len)
+    ) (List.init (len - x - List.length spec + 2) (fun i -> i))
 
 let build_candidate pss n =
   let rec cartesian_product = function
@@ -47,12 +47,18 @@ let verify_rows pss xss =
     false
 
 let transpose xss = 
-  let rec transpose_aux acc = function
-  | [] | [] :: _ -> List.rev acc
-  | matrix ->
-    let row, matrix' = List.fold_right (fun (h :: t) (r, m) -> (h :: r, t :: m)) matrix ([], []) in
-    transpose_aux (row :: acc) matrix'
-in transpose_aux [] xss
+  let rec transpose_aux transposed_matrix = function
+    | [] | [] :: _ -> List.rev transposed_matrix
+    | matrix ->
+      let new_row, remainder_matrix = List.fold_right 
+        (fun (head :: tail) (new_row_accumulator, remainder_accumulator) -> 
+           (head :: new_row_accumulator, tail :: remainder_accumulator)) 
+        matrix ([], []) 
+      in
+      transpose_aux (new_row :: transposed_matrix) remainder_matrix
+  in 
+  transpose_aux [] xss
+
 
 type nonogram_spec = {rows: int list list; cols: int list list}
 
