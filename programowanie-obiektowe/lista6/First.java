@@ -1,3 +1,5 @@
+// Dawid Pawliczek 347081 lista 6 zadanie 1
+
 import java.util.List;
 import java.util.ArrayList;
 import java.io.FileOutputStream;

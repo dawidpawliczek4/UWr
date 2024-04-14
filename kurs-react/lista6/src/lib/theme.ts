@@ -18,7 +18,7 @@ const theme = createTheme({
       primary: "#fff",
     },
     background: {
-      default: "rgb(25 27 28)",      
+      default: "rgb(25 27 28)",
     },
   },
 
@@ -35,7 +35,7 @@ const theme = createTheme({
         paper: {
           backgroundColor: "rgb(0 0 0)",
           // backgroundColor: red[900],
-        },        
+        },
       },
     },
     MuiTextField: {
@@ -45,7 +45,8 @@ const theme = createTheme({
             color: "white", // Text color
           },
           "& .MuiInputLabel-root": {
-            color: "white", // Label color when not focused
+            // color: "white", // Label color when not focused
+            color: "rgba(255, 255, 255, 0.6)",
           },
           // "& .MuiInputLabel-root.Mui-focused": {
           //   color: "white", // Label color when focused

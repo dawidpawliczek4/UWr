@@ -1,8 +1,8 @@
 import React from "react";
-import { List, Grid, TablePagination } from "@mui/material";
+import { List, TablePagination } from "@mui/material";
 import useProduct from "../providers/useProduct";
 import Product from "./Product";
-import SortSpan from "./SortSpan";
+import ProductsHeader from "./ProductsHeader";
 
 interface ProductsProps {}
 
@@ -56,34 +56,7 @@ const Products: React.FC<ProductsProps> = ({}) => {
         margin: "auto",
       }}
     >
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{
-          padding: "1rem",
-        }}
-      >
-        <SortSpan xs={2} id="name">
-          Nazwa
-        </SortSpan>
-        <SortSpan xs={2} id="type">
-          Typ
-        </SortSpan>
-        <SortSpan xs={2} id="price">
-          Cena
-        </SortSpan>
-        <SortSpan xs={2} id="availability">
-          Dostępność
-        </SortSpan>
-        <SortSpan xs={2} id="quantity">
-          Ilość
-        </SortSpan>
-        <Grid item xs={1}>
-          <span>Akcje</span>
-        </Grid>
-      </Grid>
+      <ProductsHeader />
       <List>
         {sortedProducts.map((product) => (
           <Product product={product} />

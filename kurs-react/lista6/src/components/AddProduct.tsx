@@ -17,10 +17,10 @@ interface AddProductProps {}
 const AddProduct: React.FC<AddProductProps> = ({}) => {
   const { setProducts } = useProduct();
   const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState<string>();
+  const [name, setName] = React.useState<string>("");
   const [type, setType] = React.useState<number>();
-  const [price, setPrice] = React.useState<number>();
-  const [quantity, setQuantity] = React.useState<number>();
+  const [price, setPrice] = React.useState<number>(0);
+  const [quantity, setQuantity] = React.useState<number>(0);
 
   const handleAddProduct = () => {
     if (!name || !type || !price || !quantity) {
@@ -42,8 +42,8 @@ const AddProduct: React.FC<AddProductProps> = ({}) => {
     });
     setName("");
     setType(undefined);
-    setPrice(undefined);
-    setQuantity(undefined);
+    setPrice(0);
+    setQuantity(0);
     setOpen(false);
   };
 
@@ -114,6 +114,7 @@ const AddProduct: React.FC<AddProductProps> = ({}) => {
               label="Cena"
               variant="outlined"
               type="number"
+              error={isNaN(price as number)}
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
               required
@@ -126,6 +127,7 @@ const AddProduct: React.FC<AddProductProps> = ({}) => {
               variant="outlined"
               type="number"
               value={quantity}
+              error={isNaN(quantity as number)}
               onChange={(e) => setQuantity(Number(e.target.value))}
               required
             />
