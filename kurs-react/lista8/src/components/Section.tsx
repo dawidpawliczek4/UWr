@@ -1,15 +1,15 @@
 import React from "react";
+import SectionContent from "./SectionContent";
 
 interface SectionProps {
   children: React.ReactNode;
   id: string;
-  className: string;
 }
 
-const Section: React.FC<SectionProps> = ({ children, id, className }) => {
+const Section: React.FC<SectionProps> = ({ children, id }) => {
   return (
-    <section id={id} className={"blabla" + " " + className}>
-      {children}
+    <section id={id} className={"py-5 even:bg-[#f5f5f5] dark:even:bg-[#444]"}>
+      <SectionContent>{children}</SectionContent>
     </section>
   );
 };

@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import "./styles.css";
+import Section from "./components/Section";
+import TopNav from "./components/TopNav";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import TeamMembers from "./components/TeamMembers";
+import About from "./components/About";
+import Services from "./components/Services";
+import BlogPosts from "./components/BlogPosts";
+import Contact from "./components/Contact";
 
 const companyData = {
   name: "Acme Corporation",
@@ -104,121 +112,30 @@ const App = () => {
 
   return (
     <div
-      className={`portfolio ${
+      className={`mx-auto my-0 ${
         darkMode ? "dark" : ""
-      } text-[#333] dark:text-[#fff] dark:bg-[#111]`}
+      } text-[#333] dark:text-white dark:bg-[#111] bg-white `}
     >
-      <div className="sticky top-0 py-4 text-center z-10 bg-[#f0f0f0] dark:bg-[#222]">
-        <a href="#header" className="px-5 ">
-          Home
-        </a>
-        <a href="#about" className="px-5">
-          About
-        </a>
-        <a href="#services" className="px-5">
-          Services
-        </a>
-        <a href="#team" className="px-5">
-          Team
-        </a>
-        <a href="#blog" className="px-5">
-          Blog
-        </a>
-        <a href="#contact" className="px-5">
-          Contact
-        </a>
-        <button
-          onClick={toggleTheme}
-          className="cursor-pointer px-4 py-2 bg-[#333] text-[#fff] rounded-md hover:bg-[#555]
-          dark:bg-[#ddd] dark:text-[#333] dark:hover:bg-[#ccc]
-          "
-        >
-          {darkMode ? "Light Mode" : "Dark Mode"}
-        </button>
-      </div>
-      <header id="header" className="py-12 text-center">
-        <div className="">
-          <h1 className="text-5xl mb-3 font-bold">{companyData.name}</h1>
-          <p className="text-2xl">{companyData.slogan}</p>
-        </div>
-      </header>
+      <TopNav darkMode={darkMode} toggleTheme={toggleTheme} />
+      <Header name={companyData.name} slogan={companyData.slogan} />
       <div className="rounded-lg my-3 bg-[#eee] dark:bg-[#333]">
-        <section id="about" className="section about">
-          <div className="section-content">
-            <h2 className="font-semibold">About Us</h2>
-            <p>{companyData.about}</p>
-          </div>
-        </section>
-        <section id="services" className="section services">
-          <div className="section-content">
-            <h2>Our Services</h2>
-            <ul>
-              {companyData.services.map((service) => (
-                <li key={service.id}>
-                  <h3>{service.name}</h3>
-                  <p>{service.description}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-        <section id="team" className="section team">
-          <div className="section-content">
-            <h2>Meet Our Team</h2>
-            <div className="team-members">
-              {companyData.teamMembers.map((member) => (
-                <div key={member.id} className="team-member">
-                  <img src={member.image} alt={member.name} />
-                  <div>
-                    <h3>{member.name}</h3>
-                    <p>{member.position}</p>
-                    <p>{member.bio}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section id="blog" className="section blog">
-          <div className="section-content">
-            <h2>Latest Blog Posts</h2>
-            <div className="blog-posts">
-              {companyData.blogPosts.map((post) => (
-                <div key={post.id} className="blog-post">
-                  <h3>{post.title}</h3>
-                  <p>{post.date}</p>
-                  <p>{post.content}</p>
-                  <button>Read More</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <section id="contact" className="section contact">
-          <div className="section-content">
-            <h2>Contact Us</h2>
-            <form onSubmit={handleSubmit} className="contact-form">
-              <div className="form-group">
-                <input type="text" placeholder="Name" required />
-              </div>
-              <div className="form-group">
-                <input type="email" placeholder="Email" required />
-              </div>
-              <div className="form-group">
-                <textarea rows={5} placeholder="Message" required></textarea>
-              </div>
-              <button type="submit">Send Message</button>
-            </form>
-          </div>
-        </section>
+        <Section id="about">
+          <About about={companyData.about} />
+        </Section>
+        <Section id="services">
+          <Services services={companyData.services} />
+        </Section>
+        <Section id="team">
+          <TeamMembers teamMembers={companyData.teamMembers} />
+        </Section>
+        <Section id="blog">
+          <BlogPosts blogPosts={companyData.blogPosts} />
+        </Section>
+        <Section id="contact">
+          <Contact handleSubmit={handleSubmit} />
+        </Section>
       </div>
-      <footer className="footer">
-        <div className="footer-content">
-          <p>
-            &copy; {new Date().getFullYear()} {companyData.name}
-          </p>
-        </div>
-      </footer>
+      <Footer name={companyData.name} />
     </div>
   );
 };
