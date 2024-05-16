@@ -40,7 +40,6 @@ let free_vars e =
     | Let (x, e1, e2) -> List.filter (fun y -> y <> x) (free_vars' e1 @ free_vars' e2)
   in List.sort_uniq compare (free_vars' e)
 
-  (* 2 subexpressions e1 e2 in e are equivalent if e1 and e2 are alpha_equivalent and free variables in e1 and e2 are also free in e   *)
 let are_equivalent e e1 e2 =
   alphaeq e1 e2 && List.for_all (fun x -> List.mem x (free_vars e)) (free_vars e1 @ free_vars e2)
 
@@ -79,23 +78,19 @@ let find_equiv_subexpr (e: expr) : expr list =
     match subexprs with
     | [] -> []
     | hd :: tl -> 
-      let equiv_subexprs = find_equiv_subexpr' hd tl [hd] in
+      let equiv_subexprs = find_equiv_subexpr' hd tl [] in
       if equiv_subexprs <> [] then equiv_subexprs
       else find_not_empty_equiv_subexprs tl
   in find_not_empty_equiv_subexprs subexprs
 
 let cse (e: expr) : expr option =
-  let rec cse' e =
-  let equiv_subexprs = find_equiv_subexpr e in    
-  if equiv_subexprs = [] then None
-  else
-  let rec substitute_equiv_subexprs e equiv_subexprs =
-    match equiv_subexprs with
-    | [] -> e
-    | hd :: tl ->
-     let new_e = subst e hd (Var "v0") in substitute_equiv_subexprs new_e tl
-    in
-    Some (
-    Let ("v0", List.hd equiv_subexprs,  
-    substitute_equiv_subexprs e equiv_subexprs))
-  in cse' e
+    let equiv_subexprs = find_equiv_subexpr e in   
+    if equiv_subexprs = [] then None
+    else
+    Some (Let ("v0", List.hd equiv_subexprs, subst e (List.hd equiv_subexprs) (Var "v0")))
+
+(* 
+"x + let x = 3 in x * 10 + x * 10"   
+parsed:
+Binop(Add, Var "x", Let("x", Int 3, Binop(Add, Binop(Mult, Var "x", Int 10), Binop(Mult, Var "x", Int 10))))
+*)

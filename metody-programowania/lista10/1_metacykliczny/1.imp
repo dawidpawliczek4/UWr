@@ -1,0 +1,21 @@
+var liczba
+var dzielnik
+var k
+begin
+    read liczba
+    dzielnik := 2
+    while liczba > 1 do
+    begin
+        k := liczba / dzielnik
+        k := k * dzielnik
+        while k = liczba do
+        begin
+            write dzielnik
+            liczba := liczba / dzielnik
+            k := liczba / dzielnik
+            k := k * dzielnik
+        end
+        dzielnik := dzielnik + 1
+    end
+end
+        
