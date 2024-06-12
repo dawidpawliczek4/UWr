@@ -1,0 +1,5 @@
+let fs = fun x ->
+match x with
+| (x , _) -> x
+end
+in fs (42 , 13)

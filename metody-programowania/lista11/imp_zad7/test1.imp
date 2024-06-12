@@ -1,0 +1,8 @@
+var n
+begin
+read n
+try
+    if n > 10 then raise else write n
+with
+    write 999
+end

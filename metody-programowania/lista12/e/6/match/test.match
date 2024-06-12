@@ -1,0 +1,3 @@
+match (3,4) with
+| (x,y) as pom -> (pom,x+y)
+end

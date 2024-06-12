@@ -1,0 +1,8 @@
+let is_negative = fun n ->
+    try
+        if n < 0 then raise else false
+    with
+        true
+in
+
+is_negative -1

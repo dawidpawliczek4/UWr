@@ -1,0 +1,12 @@
+var n
+begin
+try
+begin
+    read n
+    raise
+end
+with
+begin
+    write n
+    end
+end
