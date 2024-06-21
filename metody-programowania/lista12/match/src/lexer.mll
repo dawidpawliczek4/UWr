@@ -46,6 +46,7 @@ rule token =
   | "fst" { FST }
   | "snd" { SND }
   | "_"   { UNDERSCORE }
+  | "as" { AS }
   | number { INT (int_of_string (Lexing.lexeme lexbuf)) } 
   | ident { IDENT (Lexing.lexeme lexbuf) }
   | cname { CNAME (Lexing.lexeme lexbuf) }

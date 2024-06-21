@@ -16,3 +16,4 @@ let rec select_sort xs =
   | _ -> 
     let (min, rest) = select xs in
     min :: select_sort rest
+

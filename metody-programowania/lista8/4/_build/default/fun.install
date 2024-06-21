@@ -1,5 +1,0 @@
-lib: [
-  "_build/install/default/lib/fun/META"
-  "_build/install/default/lib/fun/dune-package"
-  "_build/install/default/lib/fun/opam"
-]

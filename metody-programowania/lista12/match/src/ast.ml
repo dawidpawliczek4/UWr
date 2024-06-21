@@ -13,6 +13,7 @@ type pattern =
   | PBool of bool
   | PPair of pattern * pattern
   | PCtor of cname * pattern
+  | PAs of pattern * ident
 
 type expr =
   | Unit

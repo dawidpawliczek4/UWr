@@ -14,7 +14,7 @@ let rec make_funs xs e =
 %token FUN ARR BAR
 %token AND OR EQ LT GT LEQ GEQ NEQ COMMA
 %token TRUE FALSE IF THEN ELSE LET IN
-%token TRY WITH RAISE MATCH END UNDERSCORE
+%token TRY WITH RAISE MATCH END UNDERSCORE AS
 %token FST SND
 %token EOF
 
@@ -104,4 +104,5 @@ pattern_base:
   | i=INT   { PInt i }
   | TRUE    { PBool true }
   | FALSE   { PBool false }
+  | p = pattern; AS; x = IDENT {PAs(p, x)}
   ;

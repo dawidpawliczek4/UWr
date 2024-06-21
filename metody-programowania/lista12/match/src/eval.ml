@@ -47,7 +47,12 @@ let rec match_pattern env v p =
   | VPair(v1, v2), PPair(p1, p2) ->
     (match match_pattern env v1 p1 with
     | None -> None
-    | Some env -> match_pattern env v2 p2)
+    | Some env -> match_pattern env v2 p2)    
+  | _, PAs(p, x) -> begin
+    match match_pattern env v p with
+    | None -> None
+    | Some env -> Some (M.add x v env)
+  end
   | _, PPair _ -> None
 
 let rec eval_env (env : env) (e : expr) : value =
