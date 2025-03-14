@@ -1,0 +1,10 @@
+var n = 1;
+// liczba ma prototyp?
+console.log(typeof Object.getPrototypeOf(n));
+// można jej dopisać pole/funkcję?
+n.foo = "foo";
+console.log(n.foo);
+
+Checking if Primitive Types Have Prototypes: In JavaScript, primitive values (such as numbers, strings, booleans, etc.) are not objects by default. However, JavaScript has a feature called "autoboxing," where it temporarily wraps primitives in their corresponding object wrappers (e.g., Number, String) when you try to access properties or methods on them.
+When you call Object.getPrototypeOf(n), JavaScript implicitly wraps n (the number 1) in a Number object, which does have a prototype. Thus, typeof Object.getPrototypeOf(n) will return "object" because Number has a prototype, even though n itself is a primitive.
+Attempting to Add a Property to a Primitive: When you try to add a property (foo) to n, JavaScript will again autobox n to a Number object temporarily. However, this object is discarded right after, and the property does not "stick" to the primitive value. As a result, n.foo will be undefined when you attempt to access it because primitives do not store properties like objects do.

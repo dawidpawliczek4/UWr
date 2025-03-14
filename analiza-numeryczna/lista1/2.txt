@@ -1,0 +1,7 @@
+inzynierowei, operatorzy, 1 spejclaista / peryferie, technicy, operatorzy urzadzen do przyg. danych, programisci, 
+czyli okolo 30 osob przeszkolonych do R-32
+
+r32 - komputer z rodziny Jednolity System Elektronicznych Maszyn Cyfrowych
+
+
+Pamięci ferrytowe były szeroko stosowane w tamtych czasach w systemach komputerowych ze względu na swoją niezawodność i stabilność. Pamięć ta składała się z rdzeni ferrytowych, które były magnetycznie nasycane w celu reprezentowania bitów danych (1 lub 0). System R-32 wykorzystywał te rdzenie ferrytowe jako główną pamięć operacyjną do przechowywania instrukcji i danych w czasie wykonywania programów
