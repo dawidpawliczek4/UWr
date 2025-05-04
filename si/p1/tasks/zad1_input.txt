@@ -1,2 +1,0 @@
-black a2 e4 a4
-black a1 b2 c3

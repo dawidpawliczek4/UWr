@@ -1,0 +1,39 @@
+weight = 2
+
+Validation result: 4/21 cases pass.
+
+For passing cases total num_moves: 78
+For passing cases total time: 0.030068635940551758
+
+
+
+weight = 1,5
+
+Validation result: 9/21 cases pass.
+
+For passing cases total num_moves: 165
+For passing cases total time: 9.089288711547852
+
+
+
+
+weight = 1,1
+
+Validation result: 20/21 cases pass.
+
+For passing cases total num_moves: 503
+For passing cases total time: 14.253834009170532
+
+Some test cases have failed. To rerun the failing cases execute:
+python validator2.py --cases 5 zad3 ./4
+
+
+weight = 1
+
+
+
+
+Validation result: 21/21 cases pass.
+
+For passing cases total num_moves: 526
+For passing cases total time: 26.380199909210205
