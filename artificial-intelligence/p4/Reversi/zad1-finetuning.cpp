@@ -180,6 +180,39 @@ Reversi::Move iterativeDeepening(Reversi* game, int me, Duration limit,
     return best;
 }
 
+Reversi::Move asynchronousMinMax(Reversi* game, int me, Duration limit) {
+    auto moves = game->getAllPossibleMoves(player);
+    TimePoint start = Clock::now();
+    if (moves.empty()) return {game->eval(myPlayer), {-1, -1}};
+
+    int bestScore = isMax ? INT_MIN : INT_MAX;
+    Reversi::Move bestMove{-1, -1};
+
+    for (auto m : moves) {        
+        Reversi* child = game->clone();
+        child->doMove(m, player);
+        auto [sc, _] = minimax(child, depth - 1, 1 - player, !isMax, myPlayer,
+                               start, limit);
+        delete child;
+
+        if (isMax) {
+            if (sc > bestScore) {
+                bestScore = sc;
+                bestMove = m;
+            }
+            alpha = max(alpha, bestScore);
+        } else {
+            if (sc < bestScore) {
+                bestScore = sc;
+                bestMove = m;
+            }
+            beta = min(beta, bestScore);
+        }
+        if (beta <= alpha) break;
+    }
+    return {bestScore, bestMove};
+}
+
 class AIPlayer {
     int playerId;
     int counter;

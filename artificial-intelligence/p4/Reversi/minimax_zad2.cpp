@@ -1,37 +1,34 @@
-#include <iostream>
-#include <sstream>
 #include <chrono>
 #include <climits>
+#include <iostream>
+#include <sstream>
 #include <utility>
 
 using namespace std;
 
-using Clock    = std::chrono::steady_clock;
-using TimePoint= Clock::time_point;
+using Clock = std::chrono::steady_clock;
+using TimePoint = Clock::time_point;
 using Duration = std::chrono::milliseconds;
-using Move     = std::pair<int,int>;
+using Move = std::pair<int, int>;
 struct TimeUp {};
 
 class Reversi {
-    public:
+   public:
     static constexpr int M = 8;
-    static constexpr pair<int, int>DIRS[M]  = {
-        {-1, -1}, {-1, 0}, {-1, 1},
-        {0, -1},          {0, 1},
-        {1, -1}, {1, 0}, {1, 1}
-    };
-    using Move = pair<int,int>;
+    static constexpr pair<int, int> DIRS[M] = {
+        {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+    using Move = pair<int, int>;
     int board[M][M];
 
     Reversi() {
         for (int i = 0; i < M; ++i) {
-            for (int j = 0; j < M; ++j) {                
+            for (int j = 0; j < M; ++j) {
                 if ((i == 3 && j == 3) || (i == 4 && j == 4)) {
                     board[i][j] = 1;
                 } else if ((i == 3 && j == 4) || (i == 4 && j == 3)) {
                     board[i][j] = 0;
                 } else {
-                    board[i][j] = -1;                    
+                    board[i][j] = -1;
                 }
             }
         }
@@ -39,7 +36,7 @@ class Reversi {
 
     vector<Move> getAllPossibleMoves(int player) {
         vector<Move> moves;
-        
+
         for (int i = 0; i < M; ++i) {
             for (int j = 0; j < M; ++j) {
                 if (board[i][j] == -1) {
@@ -82,7 +79,9 @@ class Reversi {
                 if (board[x1][y1] == -1) break;
                 if (board[x1][y1] == player) {
                     if (foundOpponent) {
-                        for (int i = x + dir.first, j = y + dir.second; i != x1 || j != y1; i += dir.first, j += dir.second) {
+                        for (int i = x + dir.first, j = y + dir.second;
+                             i != x1 || j != y1;
+                             i += dir.first, j += dir.second) {
                             board[i][j] = player;
                         }
                     }
@@ -95,18 +94,15 @@ class Reversi {
         }
     }
 
-
-    int eval(int player){
-        static const int WEIGHTS[8][8] = {
-            { 100, -20,  10,   5,   5,  10, -20, 100},
-            { -20, -50,  -2,  -2,  -2,  -2, -50, -20},
-            {  10,  -2,   1,   1,   1,   1,  -2,  10},
-            {   5,  -2,   1,   1,   1,   1,  -2,   5},
-            {   5,  -2,   1,   1,   1,   1,  -2,   5},
-            {  10,  -2,   1,   1,   1,   1,  -2,  10},
-            { -20, -50,  -2,  -2,  -2,  -2, -50, -20},
-            { 100, -20,  10,   5,   5,  10, -20, 100}
-        };
+    int eval(int player) {
+        static const int WEIGHTS[8][8] = {{100, -20, 10, 5, 5, 10, -20, 100},
+                                          {-20, -50, -2, -2, -2, -2, -50, -20},
+                                          {10, -2, 1, 1, 1, 1, -2, 10},
+                                          {5, -2, 1, 1, 1, 1, -2, 5},
+                                          {5, -2, 1, 1, 1, 1, -2, 5},
+                                          {10, -2, 1, 1, 1, 1, -2, 10},
+                                          {-20, -50, -2, -2, -2, -2, -50, -20},
+                                          {100, -20, 10, 5, 5, 10, -20, 100}};
 
         int score = 0;
         for (int i = 0; i < M; ++i) {
@@ -130,81 +126,58 @@ class Reversi {
         }
         return newGame;
     }
-
-
-
 };
 
+pair<int, Reversi::Move> minimax(Reversi* game, int depth, int player,
+                                 bool isMax, int myPlayer, TimePoint start,
+                                 Duration limit, int alpha = INT_MIN,
+                                 int beta = INT_MAX) {
+    if (chrono::steady_clock::now() - start > limit) throw TimeUp();
+    if (depth == 0) return {game->eval(myPlayer), {-1, -1}};
 
-std::pair<int, Reversi::Move> minimax(Reversi* game, int depth, int player, bool isMaxPlayer,int myPlayer, TimePoint moveStart, Duration timeLimit, int alpha = INT_MIN, int beta = INT_MAX) {
+    auto moves = game->getAllPossibleMoves(player);
+    if (moves.empty()) return {game->eval(myPlayer), {-1, -1}};
 
-    auto elapsed = chrono::steady_clock::now() - moveStart;
-    // cerr << "Elapsed time: " << chrono::duration_cast<chrono::milliseconds>(elapsed).count() << "ms\n";
-    if (chrono::duration_cast<chrono::milliseconds>(elapsed).count() > timeLimit.count()) {
-        throw TimeUp();
+    int bestScore = isMax ? INT_MIN : INT_MAX;
+    Reversi::Move bestMove{-1, -1};
 
-    }
+    for (auto m : moves) {
+        if (chrono::steady_clock::now() - start > limit) throw TimeUp();
+        Reversi* child = game->clone();
+        child->doMove(m, player);
+        auto [sc, _] = minimax(child, depth - 1, 1 - player, !isMax, myPlayer,
+                               start, limit, alpha, beta);
+        delete child;
 
-    if (depth == 0) {
-        return {game->eval(myPlayer), {-1, -1}};
-    }
-
-    vector<Reversi::Move> moves = game->getAllPossibleMoves(player);
-    if (moves.empty()) {
-        return {game->eval(myPlayer), {-1, -1}};
-    }
-
-    int bestScore = isMaxPlayer ? INT_MIN : INT_MAX;
-    Reversi::Move bestMove = {-1, -1};
-
-    for (const auto& move : moves) {
-        auto elapsed = chrono::steady_clock::now() - moveStart;
-        if (chrono::duration_cast<chrono::milliseconds>(elapsed).count() > timeLimit.count()) {
-            throw TimeUp();
-        }
-
-        Reversi* newGame = game->clone();
-        newGame->doMove(move, player);
-        auto [score, _] = minimax(newGame, depth - 1, 1-player, !isMaxPlayer, myPlayer,moveStart, timeLimit, alpha, beta);
-        delete newGame;
-
-        if (isMaxPlayer) {
-            if (score > bestScore) {
-                bestScore = score;
-                bestMove = move;
+        if (isMax) {
+            if (sc > bestScore) {
+                bestScore = sc;
+                bestMove = m;
             }
             alpha = max(alpha, bestScore);
-            if (beta <= alpha) {
-                break;
-            }
         } else {
-            if (score < bestScore) {
-                bestScore = score;
-                bestMove = move;
+            if (sc < bestScore) {
+                bestScore = sc;
+                bestMove = m;
             }
             beta = min(beta, bestScore);
-            if (beta <= alpha) {
-                break;
-            }
         }
+        if (beta <= alpha) break;
     }
-
     return {bestScore, bestMove};
 }
 
-
-Reversi::Move iterativeDeepening(Reversi* game, int myPlayer, Duration timeLimit) {
-    TimePoint moveStart = Clock::now();    
+Reversi::Move iterativeDeepening(Reversi* game, int myPlayer,
+                                 Duration limit) {
+    TimePoint start = Clock::now();
     Reversi::Move bestMove = {-1, -1};
     int maxDepth = 4;
 
     for (int depth = 4; depth <= maxDepth; ++depth) {
-        auto elapsed = chrono::steady_clock::now() - moveStart;
-        if (chrono::duration_cast<chrono::milliseconds>(elapsed).count() > timeLimit.count()) {
-            return bestMove;
-        }
+        if(chrono::steady_clock::now() - start > limit) break;
         try {
-            auto [score, move] = minimax(game, depth, myPlayer, true, myPlayer, moveStart, timeLimit);
+            auto [score, move] = minimax(game, depth, myPlayer, true, myPlayer,
+                                         start, limit);
             bestMove = move;
         } catch (TimeUp&) {
             return bestMove;
@@ -214,22 +187,20 @@ Reversi::Move iterativeDeepening(Reversi* game, int myPlayer, Duration timeLimit
 }
 
 class Player {
-    public:
+   public:
     Reversi game;
     int player;
     void say(string message) {
         cout << message << "\n";
         cout.flush();
     };
-    Player() {
-        reset();
-    };
+    Player() { reset(); };
     void reset() {
         game = Reversi();
         player = 1;
         say("RDY");
     };
- 
+
     pair<string, vector<string>> hear() {
         string line;
         if (!getline(cin, line)) {
@@ -243,7 +214,7 @@ class Player {
         while (iss >> arg) {
             args.push_back(arg);
         }
-        
+
         return {cmd, args};
     };
     void loop() {
@@ -251,14 +222,14 @@ class Player {
             auto [command, args] = hear();
             if (command == "HEDID") {
                 Reversi::Move move = {stoi(args[3]), stoi(args[2])};
-                game.doMove(move, 1 - player);                        
+                game.doMove(move, 1 - player);
             } else if (command == "ONEMORE") {
                 reset();
                 continue;
             } else if (command == "BYE") {
                 break;
             } else if (command == "UGO") {
-                player = 0;                                
+                player = 0;
             }
 
             Reversi* new_game = game.clone();
@@ -271,8 +242,7 @@ class Player {
     }
 };
 
-
-int main(){ 
+int main() {
     Player player = Player();
     player.loop();
     return 0;
