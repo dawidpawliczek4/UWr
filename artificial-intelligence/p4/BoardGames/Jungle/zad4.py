@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-'''
-Losowy agent do Dżungli
-'''
-
-
 import random
 import sys
+import copy
+
 
 class Jungle:
     PIECE_VALUES = {
@@ -96,19 +93,19 @@ class Jungle:
         return False
 
     def pieces_comparison(self):
-        for i in range(7,-1,-1):
+        for i in range(7, -1, -1):
             ps = []
-            for p in [0,1]:
+            for p in [0, 1]:
                 if i in self.pieces[p]:
                     ps.append(p)
             if len(ps) == 1:
                 return ps[0]
         return None
-                
-    def rat_is_blocking(self, player_unused, pos, dx, dy):        
+
+    def rat_is_blocking(self, player_unused, pos, dx, dy):
         x, y = pos
         nx = x + dx
-        for player in [0,1]:
+        for player in [0, 1]:
             if Jungle.rat not in self.pieces[1-player]:
                 continue
             rx, ry = self.pieces[1-player][Jungle.rat]
@@ -149,7 +146,7 @@ class Jungle:
                     if pos2 in self.ponds:
                         if p not in (Jungle.rat, Jungle.tiger, Jungle.lion):
                             continue
-                        #if self.board[ny][nx] is not None:
+                        # if self.board[ny][nx] is not None:
                         #    continue  # WHY??
                         if p == Jungle.tiger or p == Jungle.lion:
                             if dx != 0:
@@ -169,7 +166,7 @@ class Jungle:
         return res
 
     def victory(self, player):
-        oponent = 1-player        
+        oponent = 1-player
         if len(self.pieces[oponent]) == 0:
             self.winner = player
             return True
@@ -178,11 +175,11 @@ class Jungle:
         if self.board[y][x]:
             self.winner = player
             return True
-        
+
         if self.peace_counter >= Jungle.MAXIMAL_PASSIVE:
             r = self.pieces_comparison()
             if r is None:
-                self.winner = 1 # draw is second player's victory 
+                self.winner = 1  # draw is second player's victory
             else:
                 self.winner = r
             return True
@@ -202,7 +199,7 @@ class Jungle:
             del self.pieces[pl2][pc2]
             self.peace_counter = 0
         else:
-            self.peace_counter += 1    
+            self.peace_counter += 1
 
         self.pieces[pl][pc] = (x2, y2)
         self.board[y2][x2] = (pl, pc)
@@ -223,66 +220,163 @@ class Jungle:
             if move not in possible_moves:
                 raise WrongMove
         self.do_move(move)
-        
+
         if self.victory(player):
             assert self.winner is not None
             return 2 * self.winner - 1
         else:
             return None
 
-
-class Player(object):
-    def __init__(self):
-        self.reset()
-
-    def reset(self):
-        self.game = Jungle()
-        self.my_player = 1
-        self.say('RDY')
-
-    def say(self, what):
-        sys.stdout.write(what)
-        sys.stdout.write('\n')
-        sys.stdout.flush()
-
-    def hear(self):
-        line = sys.stdin.readline().split()
-        return line[0], line[1:]
-
-    def loop(self):
-        while True:
-            cmd, args = self.hear()
-            if cmd == 'HEDID':
-                unused_move_timeout, unused_game_timeout = args[:2]
-                move = tuple((int(m) for m in args[2:]))
-                if move == (-1, -1, -1, -1):
-                    move = None
+    def eval(self, player: int):
+        """
+        evaluates the board, for player
+        big number -> good for player
+        """
+        
+        opp = 1 - player
+        
+        # material
+        my_mat, opp_mat = 0, 0
+        for pl, pieces in self.pieces.items():
+            for piece_type, pos in pieces.items():
+                value = Jungle.PIECE_VALUES[piece_type]
+                if pl == player:
+                    my_mat += value
                 else:
-                    xs, ys, xd, yd = move
-                    move = ( (xs, ys), (xd, yd))
-                        
-                self.game.do_move(move)
-            elif cmd == 'ONEMORE':
-                self.reset()
-                continue
-            elif cmd == 'BYE':
-                break
-            else:
-                assert cmd == 'UGO'
-                #assert not self.game.move_list
-                self.my_player = 0
+                    opp_mat += value
+        material_score = my_mat - opp_mat
+        return material_score
 
-            moves = self.game.moves(self.my_player)
-            if moves:
-                move = random.choice(moves)
-                self.game.do_move(move)
-                move = (move[0][0], move[0][1], move[1][0], move[1][1])
+
+
+class MCTSPlayer(object):
+    def __init__(self):
+        self.my_player = 0
+        self.game = Jungle()
+
+    def get_move(self):
+        """
+        Zwraca najlepszy ruch wg. uproszczonego MCTS
+        """
+        moves = self.game.moves(self.my_player)
+        if not moves:
+            return None
+
+        # generujemy zbior S
+        states = []
+        for m in moves:
+            state = copy.deepcopy(self.game)
+            state.do_move(m)
+            states.append({
+                'move': m,
+                'state': state,
+                'wins': 0,
+                'plays': 0
+            })
+
+        # N - maksymalna liczba wykonywanych w symulacjach ruchow
+        N = 5000
+        index = 0
+        while N > 0:
+            entry = states[index]
+            simulate_state: Jungle = copy.deepcopy(entry['state'])
+            turns = 0
+
+            # symulujemy gre
+            while True:
+                move = simulate_state.random_move(simulate_state.curplayer)
+                simulate_state.do_move(move)
+                turns += 1
+                if simulate_state.victory(simulate_state.curplayer):
+                    winner = simulate_state.winner
+                    break
+
+            entry['plays'] += 1
+            if winner == self.my_player:
+                entry['wins'] += 1
+
+            N -= turns
+            index = (index + 1) % len(states)
+
+        best = max(states, key=lambda e: e['wins'] / e['plays'])
+        return best['move']
+
+
+class MinMaxPlayer(object):
+    def __init__(self):
+        self.my_player = 0
+        self.game = Jungle()
+
+    def minmax(self, game: Jungle, player: int, depth: int, isMaxPlayer: bool, alpha, beta):
+        """
+        returns (best_value, best_move)
+        """
+
+        if depth == 0 or len(game.moves(player)) == 0:
+            return game.eval(self.my_player), None
+
+        if isMaxPlayer:
+            best_val, best_move = float('-inf'), None
+        else:
+            best_val, best_move = float('inf'), None
+
+        for move in game.moves(player):
+            new_game = copy.deepcopy(game)
+            new_game.do_move(move)
+            val, _ = self.minmax(new_game, 1 - player,
+                                 depth - 1, not isMaxPlayer, alpha, beta)
+
+            if isMaxPlayer:
+                if val > best_val:
+                    best_val, best_move = val, move
+                    alpha = max(alpha, best_val)
+                    if alpha >= beta:
+                        break
             else:
-                self.game.do_move(None)
-                move = (-1, -1, -1, -1)
-            self.say('IDO %d %d %d %d' % move)
+                if val < best_val:
+                    best_val, best_move = val, move
+                    beta = min(beta, best_val)
+                    if alpha >= beta:
+                        break
+
+        return best_val, best_move
+
+    def get_move(self):
+        _, move = self.minmax(self.game, self.my_player,
+                              4, True, float('-inf'), float('inf'))
+        return move
+
+
+def simulate_games():
+    wins = 0
+    num_games = 20
+
+    for i in range(num_games):
+        game = Jungle()
+        mcts_agent = MCTSPlayer()
+        minmax_agent = MinMaxPlayer()
+        mcts_agent.my_player = 0
+        minmax_agent.my_player = 1
+        mcts_agent.game = game
+        minmax_agent.game = game
+
+        while True:
+            cur = game.curplayer
+            if cur == 1:
+                move = minmax_agent.get_move()
+            else:
+                move = mcts_agent.get_move()
+            game.do_move(move)
+
+            if game.victory(cur):
+                winner = game.winner
+                break
+        if winner == 1:
+            wins += 1
+        print('game | who won: ', i, winner)
+
+    print('wins: ', wins)
 
 
 if __name__ == '__main__':
-    player = Player()
-    player.loop()
+    simulate_games()

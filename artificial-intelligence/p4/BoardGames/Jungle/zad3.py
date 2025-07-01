@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-'''
-Losowy agent do Dżungli
-'''
-
-
 import random
 import sys
+import copy
 
 class Jungle:
     PIECE_VALUES = {
@@ -229,60 +225,93 @@ class Jungle:
             return 2 * self.winner - 1
         else:
             return None
+        
 
-
-class Player(object):
+class MCTSPlayer(object):
     def __init__(self):
-        self.reset()
-
-    def reset(self):
+        self.my_player = 0
         self.game = Jungle()
-        self.my_player = 1
-        self.say('RDY')
+    
+    def get_move(self):
+        """
+        Zwraca najlepszy ruch wg. uproszczonego MCTS
+        """
+        moves = self.game.moves(self.my_player)
+        if not moves:
+            return None
+        
+        #generujemy zbior S
+        states = []
+        for m in moves:
+            state = copy.deepcopy(self.game)
+            state.do_move(m)
+            states.append({
+                'move': m,
+                'state': state,
+                'wins': 0,
+                'plays': 0
+            })
 
-    def say(self, what):
-        sys.stdout.write(what)
-        sys.stdout.write('\n')
-        sys.stdout.flush()
+        # N - maksymalna liczba wykonywanych w symulacjach ruchow
+        N = 5000
+        index = 0
+        while N > 0:
+            entry = states[index]
+            simulate_state: Jungle = copy.deepcopy(entry['state'])
+            turns = 0
 
-    def hear(self):
-        line = sys.stdin.readline().split()
-        return line[0], line[1:]
+            #symulujemy gre
+            while True:
+                move = simulate_state.random_move(simulate_state.curplayer)
+                simulate_state.do_move(move)
+                turns += 1
+                if simulate_state.victory(simulate_state.curplayer):
+                    winner = simulate_state.winner
+                    break
+            
+            entry['plays'] += 1
+            if winner == self.my_player:
+                entry['wins'] += 1
+            
+            N -= turns
+            index = (index + 1) % len(states)
 
-    def loop(self):
+        best = max(states, key=lambda e: e['wins'] / e['plays'])
+        return best['move']
+    
+    
+
+def simulate_games():
+    wins = 0
+    num_games = 100
+
+    for i in range(num_games):
+        game = Jungle()
+        mcts_agent = MCTSPlayer()                
+        mcts_agent.game = game
+        mcts_agent.my_player = 0
+
         while True:
-            cmd, args = self.hear()
-            if cmd == 'HEDID':
-                unused_move_timeout, unused_game_timeout = args[:2]
-                move = tuple((int(m) for m in args[2:]))
-                if move == (-1, -1, -1, -1):
-                    move = None
-                else:
-                    xs, ys, xd, yd = move
-                    move = ( (xs, ys), (xd, yd))
-                        
-                self.game.do_move(move)
-            elif cmd == 'ONEMORE':
-                self.reset()
-                continue
-            elif cmd == 'BYE':
-                break
-            else:
-                assert cmd == 'UGO'
-                #assert not self.game.move_list
-                self.my_player = 0
+            cur = game.curplayer
 
-            moves = self.game.moves(self.my_player)
-            if moves:
-                move = random.choice(moves)
-                self.game.do_move(move)
-                move = (move[0][0], move[0][1], move[1][0], move[1][1])
+            if cur == 0:
+                move = mcts_agent.get_move()
             else:
-                self.game.do_move(None)
-                move = (-1, -1, -1, -1)
-            self.say('IDO %d %d %d %d' % move)
+                move = game.random_move(cur)
+
+            game.do_move(move)
+
+            if game.victory(cur):
+                winner = game.winner
+                break
+
+        if winner == 0:
+            wins += 1
+        print('won ', winner)        
+    
+    print(wins)
+
 
 
 if __name__ == '__main__':
-    player = Player()
-    player.loop()
+    simulate_games()
