@@ -1,35 +1,13 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from torch.nn import functional as F
+import re
 
 model_name = 'flax-community/papuGaPT2'
 device = 'cpu'
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-
-def generate_replies_multiple_return_best(tokenizer: AutoTokenizer, model: AutoModelForCausalLM, prompt: str) -> list[str]:
-    encoded = tokenizer(prompt, return_tensors="pt")
-
-    with torch.no_grad():
-        outputs = model.generate(
-            **encoded,
-            max_new_tokens=50,
-            temperature=0.8,
-            repetition_penalty=1.2,
-            top_p=0.90,
-            do_sample=True,
-            pad_token_id=tokenizer.eos_token_id,
-            num_return_sequences=20,
-        )
-
-    replies = []
-    for output in outputs:
-        decoded = tokenizer.decode(output, skip_special_tokens=True)
-        reply = decoded[len(prompt) :].strip()
-        replies.append(reply or "(no response)")
-
-
 
 def generate_reply(question: str):
     encoded = tokenizer(question, return_tensors="pt")
@@ -42,26 +20,40 @@ def generate_reply(question: str):
         return output
 
 def answer_czy(question: str):
-    encoded = tokenizer(question, return_tensors="pt")
-    with torch.no_grad():
-        outputs = model.generate(
-            **encoded,
-            max_new_tokens = 10,
-            do_sample = True,
-        )
-    yes_no = filter()
-    # make that fun
+    p_tak = sentence_prob(question + " tak")
+    p_nie = sentence_prob(question + " nie")
+
+    return "tak" if p_tak > p_nie else "nie"
+
 
 def answer_ile(question: str):
+    """Generuje odpowiedź liczbową i wybiera pierwszą liczbę z generacji."""
     encoded = tokenizer(question, return_tensors="pt")
     with torch.no_grad():
         outputs = model.generate(
             **encoded,
-            max_new_tokens = 10,
-            do_sample = True,
+            max_new_tokens=10,
+            do_sample=True,
+            temperature=0.7,
+            top_p=0.9,
+            repetition_penalty=1.2,
+            pad_token_id=tokenizer.eos_token_id,
+            num_return_sequences=5,
         )
-    number = filter()
-    #make that fun
+
+    candidates = []
+    for output in outputs:
+        decoded = tokenizer.decode(output, skip_special_tokens=True)
+        reply = decoded[len(question):].strip()
+        candidates.append(reply)
+
+    # Heurystyka: znajdź pierwszą liczbę w wygenerowanym tekście
+    for cand in candidates:
+        match = re.search(r'\d+', cand)
+        if match:
+            return match.group(0)
+
+    return "(brak liczby)"
 
 
 def log_probs_from_logits(logits, labels):
@@ -78,6 +70,14 @@ def sentence_prob(sentence_txt):
         seq_log_probs = torch.sum(log_probs)
     return seq_log_probs.cpu().numpy()
 
+def answer_question(question: str):
+    if question.startswith("Ile"):
+        return answer_ile(question)
+    elif question.startswith("Czy"):
+        return answer_czy(question)
+    else:
+        return generate_reply(question)
+
 
 questions: list[str] = []
 with open("task4_questions.txt") as f:
@@ -91,26 +91,18 @@ with open("task4_questions.txt") as f:
 2. grupa 'czy' - odpwoaidamy tak/nie. bedziemy obliczac ppb prompt+'tak' i ppb prompt+'nie'
 """
 
-
 answers: list[str] = []
-with open ("task4_answers.txt") as f:
+with open("task4_answers.txt") as f:
     for line in f:
         answers.append(line.strip())
 
+good_ans = 0
+
 for question, answer in zip(questions, answers):
-    print(question)
-    print(answer)
+    model_ans = answer_question(question)
+    if model_ans == answer:
+        good_ans += 1
 
+print(good_ans)
 
-def answer_question(question: str):
-    if question.startswith("Ile"):
-        return answer_ile(question)
-    elif question.startswith("Czy"):
-        return answer_czy(question)
-    else:
-        return generate_reply(question)
-
-
-def answer_ile(question: str):
-    pass
 
