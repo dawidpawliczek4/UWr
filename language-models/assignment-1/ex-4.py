@@ -4,18 +4,19 @@ from torch.nn import functional as F
 import re
 
 model_name = 'flax-community/papuGaPT2'
-device = 'cpu'
+device = 'mps'
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
 
 def generate_reply(question: str):
-    encoded = tokenizer(question, return_tensors="pt")
+    encoded = tokenizer(question, return_tensors="pt").to(device)
     with torch.no_grad():
         output = model.generate(
             **encoded,
-            max_new_tokens = 25,
-            do_sample = False
+            max_new_tokens = 5,
+            do_sample = False,
+            pad_token_id=tokenizer.eos_token_id,
         )
         return output
 
@@ -28,11 +29,11 @@ def answer_czy(question: str):
 
 def answer_ile(question: str):
     """Generuje odpowiedź liczbową i wybiera pierwszą liczbę z generacji."""
-    encoded = tokenizer(question, return_tensors="pt")
+    encoded = tokenizer(question, return_tensors="pt").to(device)
     with torch.no_grad():
         outputs = model.generate(
             **encoded,
-            max_new_tokens=10,
+            max_new_tokens=2,
             do_sample=True,
             temperature=0.7,
             top_p=0.9,
@@ -104,5 +105,7 @@ for question, answer in zip(questions, answers):
         good_ans += 1
 
 print(good_ans)
+print(len(questions))
+print(good_ans / len(questions))
 
 

@@ -1,3 +1,5 @@
 _build
 venv
 .DS_Store
+.idea
+.venv

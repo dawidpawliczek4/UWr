@@ -30,10 +30,12 @@ variants = [
     ["uwielbiała", "wielbił", "wielbiła", "uwielbił", "wielbiło", "uwielbiał", "uwielbiało", "uwielbiały"],
     ["słuchać", "osłuchać", "słychać", "usłuchać"],
     ["o", "i", "e", "a", "ó", "ę", "y", "ą", "u"],
-    ["wartościach własnych", "owłosionych macierzy", "mocarz", "macierzą", "macierze", "mocarza", "mocarze", "mocarzy", "macierz"]
+    ["wartościach" ] ,
+    [ "własnych", "owłosionych" ],
+    [ "macierzy", "mocarz", "macierzą", "macierze", "mocarza", "mocarze", "mocarzy", "macierz"]
 ]
 
-beam_size = 5
+beam_size = 2
 beams = [("", 0)]  # zdanie, wynik
 for list_variants in variants:
     new_beams = []
@@ -46,3 +48,4 @@ for list_variants in variants:
 
 # na końcu najlepsze zdanie:
 print(beams[0][0])
+print(beams[0][1])

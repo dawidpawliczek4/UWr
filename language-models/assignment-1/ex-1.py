@@ -1,5 +1,4 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from sentence_transformers import SentenceTransformer, util
 import torch
 
 
@@ -7,11 +6,7 @@ MODEL_NAME = "flax-community/papuGaPT2"
 
 
 # here we using semantic score, idk if in scope of task
-emb_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-def semantic_score(prompt: str, reply: str) -> float:
-    emb1 = emb_model.encode(prompt, convert_to_tensor=True)
-    emb2 = emb_model.encode(reply, convert_to_tensor=True)
-    return float(util.cos_sim(emb1, emb2))
+
 def hybrid_score(prompt: str, reply: str) -> float:
     return score(reply)
     return semantic_score(prompt, reply) * 0.7 + score(reply) * 0.3
